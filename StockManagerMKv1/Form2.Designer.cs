@@ -52,7 +52,6 @@
             this.button15 = new System.Windows.Forms.Button();
             this.button16 = new System.Windows.Forms.Button();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.button17 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button19 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
@@ -151,6 +150,7 @@
             this.button3.Text = "Salir";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
             // 
             // button2
             // 
@@ -443,14 +443,13 @@
             this.button16.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.button16.Size = new System.Drawing.Size(199, 45);
             this.button16.TabIndex = 9;
-            this.button16.Text = "button16";
+            this.button16.Text = "Ficheros";
             this.button16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button16.UseVisualStyleBackColor = false;
             this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // panel7
             // 
-            this.panel7.Controls.Add(this.button17);
             this.panel7.Controls.Add(this.button18);
             this.panel7.Controls.Add(this.button19);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
@@ -458,23 +457,6 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(199, 71);
             this.panel7.TabIndex = 10;
-            // 
-            // button17
-            // 
-            this.button17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(44)))), ((int)(((byte)(47)))));
-            this.button17.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button17.FlatAppearance.BorderSize = 0;
-            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button17.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button17.ForeColor = System.Drawing.SystemColors.Control;
-            this.button17.Location = new System.Drawing.Point(0, 46);
-            this.button17.Name = "button17";
-            this.button17.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.button17.Size = new System.Drawing.Size(199, 23);
-            this.button17.TabIndex = 2;
-            this.button17.Text = "button17";
-            this.button17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button17.UseVisualStyleBackColor = false;
             // 
             // button18
             // 
@@ -489,7 +471,7 @@
             this.button18.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
             this.button18.Size = new System.Drawing.Size(199, 23);
             this.button18.TabIndex = 1;
-            this.button18.Text = "button18";
+            this.button18.Text = "Importar";
             this.button18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button18.UseVisualStyleBackColor = false;
             // 
@@ -506,7 +488,7 @@
             this.button19.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
             this.button19.Size = new System.Drawing.Size(199, 23);
             this.button19.TabIndex = 0;
-            this.button19.Text = "button19";
+            this.button19.Text = "Exportar";
             this.button19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button19.UseVisualStyleBackColor = false;
             // 
@@ -677,7 +659,6 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Button button17;
         private System.Windows.Forms.Button button18;
         private System.Windows.Forms.Button button19;
         private System.Windows.Forms.Button button16;
