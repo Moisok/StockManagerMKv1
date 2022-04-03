@@ -12,12 +12,16 @@ namespace StockManagerMKv1
 {
     public partial class Form2 : Form
     {
+        clasesextra.bbdd datosBase = new clasesextra.bbdd();
         public Form2()
         {
+            
             InitializeComponent();
             ocultar();
             hideOcultar();
+            datosBase.conectar();
             checkBox1.Checked = true;
+            checkBox2.Checked = true;
         }
 
         private void ocultar()
@@ -28,11 +32,12 @@ namespace StockManagerMKv1
             panel6.Visible = false;
             panel7.Visible = false;
             panel8.Visible = false;
+            panel9.Visible = false;
         }
 
         private void hideOcultar()
         {
-            if (panel3.Visible)
+            /*if (panel3.Visible)
             {
                 panel3.Visible = false;
             }
@@ -47,9 +52,19 @@ namespace StockManagerMKv1
             if (panel6.Visible)
             {
                 panel6.Visible = false;
+            }*/
+            if (panel8.Visible)
+            {
+                panel8.Visible = false;
+            }
+            if (panel9.Visible)
+            {
+                panel9.Visible = false;
             }
 
+
         }
+
 
         private void showOcultar(Panel subMenu)
         {
@@ -77,7 +92,7 @@ namespace StockManagerMKv1
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            showOcultar(panel9);
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -129,7 +144,7 @@ namespace StockManagerMKv1
         {
             if (textBox2.Text == textBox3.Text && textBox1.Text.Length > 0)
             {
-                //consultasbbdd.crearUsuario(textBox1.Text,textBox2.Text);
+                datosBase.crearUsuario(textBox1.Text, textBox2.Text);
                 MessageBox.Show("Se ha creado la entidad " + textBox1.Text);
                 panel7.Visible = false;
             }
@@ -168,6 +183,60 @@ namespace StockManagerMKv1
         private void button3_Click_1(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Este programa ha sido creado por Moises Sepulveda Segarra\n" +
+                "para un proyecto de FPGS actualmente se encuentra en su version 1.0.");
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel9_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel8_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void textBox6_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+            textBox5.PasswordChar = '*';
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            datosBase.iniciarSesion(textBox6.Text, textBox5.Text);
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked == true)
+            {
+                textBox5.PasswordChar = '*';
+            }
+            else
+            {
+                textBox5.PasswordChar = '\0';
+            }
+
         }
     }
 }
