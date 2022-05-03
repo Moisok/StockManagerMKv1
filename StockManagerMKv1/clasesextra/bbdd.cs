@@ -33,20 +33,19 @@ namespace StockManagerMKv1.clasesextra
         public String Prod_cantidad;
         public String Prod_ubicacion;
         public String Prod_proveedor;
-        public byte[] Prod_foto;
+        public String Prod_barcode;
+        public String Prod_mod;
         public System.IO.MemoryStream ms2;
 
 
         public void conectar()
         {
             connection.Open();
-            Console.WriteLine(connection.State);
         }
 
         //Metodo para comprobar si la conexion esta o no abierta
         public void verificarConexion()
         {
-            Console.WriteLine(connection.State);
             if (connection.State != ConnectionState.Open)
             {
                 conectar();
@@ -78,7 +77,8 @@ namespace StockManagerMKv1.clasesextra
                 "Cantidad INT NOT NULL,  " +
                 "Ubicacion VARCHAR(25) NULL, " +
                 "Nombre_Proveedor VARCHAR(20) NOT NULL," +
-
+                "Codigo_barras VARCHAR(7) NOT NULL," +
+                //"Ultima_Modificacion VARCHAR(25) NULL," +
                 "CONSTRAINT FK_nombre_proveedor" + nombre + " FOREIGN KEY (Nombre_Proveedor) REFERENCES " +
                 "proveedores" + nombre + " (Nombre_Proveedor) ON UPDATE CASCADE ON DELETE CASCADE)";
                 ejecutar = new SqlCommand(query3, connection);
@@ -163,19 +163,18 @@ namespace StockManagerMKv1.clasesextra
             verificarConexion();
             try
             {
-                String query = "SELECT * FROM proveedores" + V_nombre + " " +
-                     "WHERE id = " + id + ";";
+                String query = "SELECT * FROM proveedores" + V_nombre + " ";
                 SqlCommand ejecutar = new SqlCommand(query, connection);
                 ejecutar = new SqlCommand(query, connection); //REVISAR
                 ejecutar.ExecuteNonQuery();
                 DataTable datos = new DataTable();
                 SqlDataAdapter verif = new SqlDataAdapter(ejecutar);
                 verif.Fill(datos);
-                P_id = datos.Rows[0][0].ToString();
-                P_nombre = datos.Rows[0][1].ToString();
-                P_telefono = datos.Rows[0][2].ToString();
-                P_contacto = datos.Rows[0][3].ToString();
-                P_web = datos.Rows[0][4].ToString();
+                P_id = datos.Rows[id][0].ToString();
+                P_nombre = datos.Rows[id][1].ToString();
+                P_telefono = datos.Rows[id][2].ToString();
+                P_contacto = datos.Rows[id][3].ToString();
+                P_web = datos.Rows[id][4].ToString();
                 connection.Close();
             }
             catch (Exception ex)
@@ -248,13 +247,13 @@ namespace StockManagerMKv1.clasesextra
         }
 
         //Metodo para eliminar registros de la tabla proveedores
-        public void eliminarProveedores(int id)
+        public void eliminarProveedores(String nombre)
         {
             verificarConexion();
             try
             {
                 String query = "DELETE FROM proveedores" + V_nombre + " " +
-                    "WHERE Id =" + id + ";";
+                    "WHERE Nombre_Proveedor ='" + nombre + "';";
                 SqlCommand ejecutar = new SqlCommand(query, connection);
                 ejecutar.ExecuteNonQuery();
                 MessageBox.Show("Se ha eliminado el registro");
@@ -269,14 +268,14 @@ namespace StockManagerMKv1.clasesextra
 
         //OPERACIONES Y CONSULTAS DE STOCK
         //Metodo para insertar en Stock las tablas de proveedores
-        public void insertarStock(String nombre, int cantidad, String ubicacion, String proveedor)
+        public void insertarStock(String nombre, int cantidad, String ubicacion, String proveedor, String code)
         {
             verificarConexion();
             try
             {
                 //Creamos la query
-                string query = "INSERT INTO productos" + V_nombre + " (Nombre,Cantidad,Ubicacion,Nombre_Proveedor)" +
-                    "VALUES('" + nombre + "'," + cantidad + ",'" + ubicacion + "','" + proveedor + "');"; //Probar con comillas y sin comillas
+                string query = "INSERT INTO productos" + V_nombre + " (Nombre,Cantidad,Ubicacion,Nombre_Proveedor,Codigo_barras)" +
+                    "VALUES('" + nombre + "'," + cantidad + ",'" + ubicacion + "','" + proveedor + "','"+code+"');"; //Probar con comillas y sin comillas
                 SqlCommand ejecutar = new SqlCommand(query, connection);
                 ejecutar = new SqlCommand(query, connection);
                 ejecutar.ExecuteNonQuery();
@@ -299,24 +298,24 @@ namespace StockManagerMKv1.clasesextra
             verificarConexion();
             try
             {
-                String query = "SELECT * FROM productos" + V_nombre + " " +
-                     "WHERE id = " + id + ";";
+                String query = "SELECT * FROM productos" + V_nombre + " ";
                 SqlCommand ejecutar = new SqlCommand(query, connection);
-                ejecutar = new SqlCommand(query, connection); //REVISAR
+                ejecutar = new SqlCommand(query, connection); 
                 ejecutar.ExecuteNonQuery();
                 DataTable datos = new DataTable();
                 SqlDataAdapter verif = new SqlDataAdapter(ejecutar);
                 verif.Fill(datos);
-                Prod_id = datos.Rows[0][0].ToString();
-                Prod_nombre = datos.Rows[0][1].ToString();
-                Prod_cantidad = datos.Rows[0][2].ToString();
-                Prod_ubicacion = datos.Rows[0][3].ToString();
-                Prod_proveedor = datos.Rows[0][4].ToString();
+                Prod_id = datos.Rows[id][0].ToString();
+                Prod_nombre = datos.Rows[id][1].ToString();
+                Prod_cantidad = datos.Rows[id][2].ToString();
+                Prod_ubicacion = datos.Rows[id][3].ToString();
+                Prod_proveedor = datos.Rows[id][4].ToString();
+                Prod_barcode = datos.Rows[id][5].ToString();
                 connection.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("No se ha podido consultar los datos del proveedor " + ex.Message);
+                MessageBox.Show("No se ha podido consultar los datos del producto " + ex.Message);
                 connection.Close();
             }
         }
@@ -330,7 +329,7 @@ namespace StockManagerMKv1.clasesextra
                 String query = "SELECT * FROM productos" + V_nombre + " " +
                      "WHERE Nombre = '" + nombre + "';";
                 SqlCommand ejecutar = new SqlCommand(query, connection);
-                ejecutar = new SqlCommand(query, connection); //REVISAR
+                ejecutar = new SqlCommand(query, connection); 
                 ejecutar.ExecuteNonQuery();
                 DataTable datos = new DataTable();
                 SqlDataAdapter verif = new SqlDataAdapter(ejecutar);
@@ -340,6 +339,7 @@ namespace StockManagerMKv1.clasesextra
                 Prod_cantidad = datos.Rows[0][2].ToString();
                 Prod_ubicacion = datos.Rows[0][3].ToString();
                 Prod_proveedor = datos.Rows[0][4].ToString();
+                Prod_barcode = datos.Rows[0][5].ToString();
                 connection.Close();
             }
             catch (Exception ex)
@@ -383,13 +383,13 @@ namespace StockManagerMKv1.clasesextra
         }
 
         //Metodo para eliminar registros de la tabla productos
-        public void eliminarProducto(int id)
+        public void eliminarProducto(String nombre)
         {
             verificarConexion();
             try
             {
                 String query = "DELETE FROM productos" + V_nombre + " " +
-                    "WHERE Id =" + id + ";";
+                    "WHERE Nombre ='" + nombre + "';";
                 SqlCommand ejecutar = new SqlCommand(query, connection);
                 ejecutar.ExecuteNonQuery();
                 MessageBox.Show("Se ha eliminado el producto");

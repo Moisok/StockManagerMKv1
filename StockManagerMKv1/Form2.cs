@@ -17,10 +17,11 @@ namespace StockManagerMKv1
     public partial class Form2 : Form
     {
         clasesextra.bbdd datosBase = new clasesextra.bbdd();
-        int idProveedor = 0;
-        int idProveedor2 = 0;
-        int idPorducto = 0;
-        int idPorducto2 = 0;
+        Random r;
+        int idProveedor = -1;
+        int idProveedor2 = -1;
+        int idPorducto = -1;
+        int idPorducto2 = -1;
         Form3 tablasProveedores;
         Form4 tablasProductos;
         String ruta;
@@ -37,6 +38,8 @@ namespace StockManagerMKv1
            label37.ForeColor = System.Drawing.Color.White;
            label38.ForeColor = System.Drawing.Color.White;
            label39.ForeColor = System.Drawing.Color.White;
+           label46.ForeColor = System.Drawing.Color.White;
+
             panel3.Visible = true;
             panel4.Visible = true;
             panel5.Visible = true;
@@ -348,6 +351,7 @@ namespace StockManagerMKv1
 
         private void button22_Click(object sender, EventArgs e)
         {
+            //Añadir excepcion
             int num_var = Int32.Parse(textBox7.Text);
             datosBase.insertarProveedores(textBox4.Text,num_var,textBox8.Text,textBox9.Text);
         }
@@ -366,7 +370,6 @@ namespace StockManagerMKv1
         {
   
             datosBase.consultarProveedorNombre(textBox10.Text);
-            idProveedor = 0;
             nombre.Text = datosBase.P_nombre;
             telefono.Text = datosBase.P_telefono;
             contacto.Text = datosBase.P_contacto;
@@ -403,23 +406,12 @@ namespace StockManagerMKv1
         {
 
             idProveedor--;
-            if (idProveedor == 0)
-            {
-                idProveedor = 1;
-                datosBase.consultarProveedor(idProveedor);
-                nombre.Text = datosBase.P_nombre;
-                telefono.Text = datosBase.P_telefono;
-                contacto.Text = datosBase.P_contacto;
-                web.Text = datosBase.P_web;
-            }
-            else
-            {
-                datosBase.consultarProveedor(idProveedor);
-                nombre.Text = datosBase.P_nombre;
-                telefono.Text = datosBase.P_telefono;
-                contacto.Text = datosBase.P_contacto;
-                web.Text = datosBase.P_web;
-            }
+            datosBase.consultarProveedor(idProveedor);
+            nombre.Text = datosBase.P_nombre;
+            telefono.Text = datosBase.P_telefono;
+            contacto.Text = datosBase.P_contacto;
+            web.Text = datosBase.P_web;
+
            
         }
 
@@ -537,7 +529,7 @@ namespace StockManagerMKv1
 
         private void button20_Click(object sender, EventArgs e)
         {
-            datosBase.eliminarProveedores(idProveedor2);
+            datosBase.eliminarProveedores(textBox12.Text);
         }
 
         private void label27_Click(object sender, EventArgs e)
@@ -573,8 +565,8 @@ namespace StockManagerMKv1
 
         private void button32_Click(object sender, EventArgs e)
         {
-
-            datosBase.insertarStock(textBox16.Text, Int32.Parse(textBox19.Text), textBox17.Text, textBox18.Text);
+            r = new Random();
+            datosBase.insertarStock(textBox16.Text, Int32.Parse(textBox19.Text), textBox17.Text, textBox18.Text, r.Next(1000000, 9999999).ToString());
             SaveFileDialog Guardar = new SaveFileDialog();
             Guardar.Filter = "JPEG(*.JPG)|*.JPG|BMP(*.BMP)|*.BMP";
             Image foto = pictureBox2.Image;
@@ -619,8 +611,7 @@ namespace StockManagerMKv1
             label37.Text = datosBase.Prod_cantidad;
             label38.Text = datosBase.Prod_ubicacion;
             label39.Text = datosBase.Prod_proveedor;
-            idPorducto = Int32.Parse(datosBase.Prod_id); //Controlar excepcion
-            //Foto
+            label46.Text = datosBase.Prod_barcode;
             pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
         }
 
@@ -662,6 +653,7 @@ namespace StockManagerMKv1
             label37.Text = datosBase.Prod_cantidad;
             label38.Text = datosBase.Prod_ubicacion;
             label39.Text = datosBase.Prod_proveedor;
+            label46.Text = datosBase.Prod_barcode;
             pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
         }
 
@@ -674,6 +666,7 @@ namespace StockManagerMKv1
             label37.Text = datosBase.Prod_cantidad;
             label38.Text = datosBase.Prod_ubicacion;
             label39.Text = datosBase.Prod_proveedor;
+            label46.Text = datosBase.Prod_barcode;
             pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
         }
 
@@ -800,8 +793,7 @@ namespace StockManagerMKv1
 
         private void button44_Click(object sender, EventArgs e)
         {
-            datosBase.eliminarProducto(idPorducto2);
-            datosBase.actualizarId(idPorducto2);
+            datosBase.eliminarProducto(textBox21.Text);
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -818,6 +810,16 @@ namespace StockManagerMKv1
         {
             this.WindowState = FormWindowState.Minimized;
             ShowInTaskbar = true;
+        }
+        //Aqui se cargaran las fotos de los codigos de barras
+        private void pictureBox1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label46_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -168,13 +168,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>dbapp.mdf</DependentUpon>
     </Content>
-    <Content Include="database\Debug\dbapp.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="database\Debug\dbapp_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>dbapp.mdf</DependentUpon>
-    </Content>
     <None Include="resources\StockLogo.png" />
     <None Include="resources\no image.jpg" />
   </ItemGroup>
