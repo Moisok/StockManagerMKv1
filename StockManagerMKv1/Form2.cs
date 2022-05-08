@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using IronBarCode;
 
 namespace StockManagerMKv1
 {
@@ -24,7 +25,12 @@ namespace StockManagerMKv1
         int idPorducto2 = -1;
         Form3 tablasProveedores;
         Form4 tablasProductos;
+        Form5 exportar;
+        Form6 importar;
         String ruta;
+        String ruta2;
+        String theDate;
+        String theDate2;
         public Form2()
         {
             
@@ -201,7 +207,9 @@ namespace StockManagerMKv1
                 datosBase.crearUsuario(textBox1.Text, textBox2.Text);
                 Image Imagen = pictureBox2.Image;
                 ruta = Directory.GetCurrentDirectory() + "/Fotos" + textBox1.Text;
+                ruta2 = Directory.GetCurrentDirectory() + "/Codigosb" + textBox1.Text;
                 Directory.CreateDirectory(ruta);
+                Directory.CreateDirectory(ruta2);
                 MessageBox.Show("Se ha creado la entidad " + textBox1.Text);
             }
             else
@@ -368,7 +376,6 @@ namespace StockManagerMKv1
 
         private void button26_Click(object sender, EventArgs e)
         {
-  
             datosBase.consultarProveedorNombre(textBox10.Text);
             nombre.Text = datosBase.P_nombre;
             telefono.Text = datosBase.P_telefono;
@@ -404,7 +411,6 @@ namespace StockManagerMKv1
 
         private void button25_Click(object sender, EventArgs e)
         {
-
             idProveedor--;
             datosBase.consultarProveedor(idProveedor);
             nombre.Text = datosBase.P_nombre;
@@ -465,17 +471,21 @@ namespace StockManagerMKv1
 
         private void button29_Click(object sender, EventArgs e)
         {
+            datosBase.ordenarProveedores();
             idProveedor2++;
+            Console.WriteLine(idProveedor2);
             datosBase.consultarProveedor(idProveedor2);
             textBox12.Text = datosBase.P_nombre;
             textBox13.Text = datosBase.P_telefono;
             textBox14.Text = datosBase.P_contacto;
             textBox15.Text = datosBase.P_web;
             label25.Text = datosBase.P_id;
+            
         }
 
         private void button28_Click(object sender, EventArgs e)
         {
+            datosBase.ordenarProveedores();
             idProveedor2--;
             datosBase.consultarProveedor(idProveedor2);
             textBox12.Text = datosBase.P_nombre;
@@ -483,6 +493,8 @@ namespace StockManagerMKv1
             textBox14.Text = datosBase.P_contacto;
             textBox15.Text = datosBase.P_web;
             label25.Text = datosBase.P_id;
+
+
         }
 
         private void panel12_Paint(object sender, PaintEventArgs e)
@@ -497,6 +509,7 @@ namespace StockManagerMKv1
 
         private void button30_Click(object sender, EventArgs e)
         {
+            datosBase.ordenarProveedores();
             datosBase.consultarProveedorNombre(textBox11.Text);
             idProveedor2 = Int32.Parse(datosBase.P_id);
             textBox12.Text = datosBase.P_nombre;
@@ -519,7 +532,7 @@ namespace StockManagerMKv1
 
         private void button31_Click(object sender, EventArgs e)
         {
-            datosBase.modificarProveedores(idProveedor2, textBox12.Text,Int32.Parse(textBox13.Text),textBox14.Text,textBox15.Text);
+            datosBase.modificarProveedores(idProveedor2+1, textBox12.Text,Int32.Parse(textBox13.Text),textBox14.Text,textBox15.Text);
         }
 
         private void label25_Click(object sender, EventArgs e)
@@ -563,14 +576,17 @@ namespace StockManagerMKv1
             }
         }
 
+        //Insertar Stock
         private void button32_Click(object sender, EventArgs e)
         {
-            r = new Random();
-            datosBase.insertarStock(textBox16.Text, Int32.Parse(textBox19.Text), textBox17.Text, textBox18.Text, r.Next(1000000, 9999999).ToString());
-            SaveFileDialog Guardar = new SaveFileDialog();
-            Guardar.Filter = "JPEG(*.JPG)|*.JPG|BMP(*.BMP)|*.BMP";
-            Image foto = pictureBox2.Image;
-            foto.Save(ruta + textBox16.Text + ".JPEG");
+                theDate = dateTimePicker1.Value.ToString("yyyy-MM-dd");
+                datosBase.insertarStock(textBox16.Text, Int32.Parse(textBox19.Text), textBox17.Text, textBox18.Text, textBox26.Text, theDate);
+                SaveFileDialog Guardar = new SaveFileDialog();
+                Guardar.Filter = "JPEG(*.JPG)|*.JPG|BMP(*.BMP)|*.BMP";
+                Image foto = pictureBox2.Image;
+                foto.Save(ruta + textBox16.Text + ".JPEG");
+                BarcodeWriter.CreateBarcode(textBox26.Text, BarcodeWriterEncoding.Code128).SaveAsJpeg(ruta2 + "/" + textBox26.Text + ".jpg");
+
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
@@ -612,7 +628,17 @@ namespace StockManagerMKv1
             label38.Text = datosBase.Prod_ubicacion;
             label39.Text = datosBase.Prod_proveedor;
             label46.Text = datosBase.Prod_barcode;
-            pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
+            label50.Text = datosBase.Prod_date;
+            label51.Text = datosBase.Prod_datemod;
+            try
+            {
+                pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
+                pictureBox1.Image = Image.FromFile(ruta2 + "/" + label46.Text + ".jpg");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar la foto");
+            }
         }
 
         private void panel14_Paint(object sender, PaintEventArgs e)
@@ -654,20 +680,40 @@ namespace StockManagerMKv1
             label38.Text = datosBase.Prod_ubicacion;
             label39.Text = datosBase.Prod_proveedor;
             label46.Text = datosBase.Prod_barcode;
-            pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
+            label50.Text = datosBase.Prod_date;
+            label51.Text = datosBase.Prod_datemod;
+            try
+            {
+                pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
+                pictureBox1.Image = Image.FromFile(ruta2 + "/" + label46.Text + ".jpg");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar la foto");
+            };
         }
 
         private void button36_Click(object sender, EventArgs e)
         {
+                idPorducto++;
+                datosBase.consultarProducto(idPorducto);
+                label36.Text = datosBase.Prod_nombre;
+                label37.Text = datosBase.Prod_cantidad;
+                label38.Text = datosBase.Prod_ubicacion;
+                label39.Text = datosBase.Prod_proveedor;
+                label46.Text = datosBase.Prod_barcode;
+                label50.Text = datosBase.Prod_date;
+                label51.Text = datosBase.Prod_datemod;
+            try
+            {
+                pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
+                pictureBox1.Image = Image.FromFile(ruta2 + "/" + label46.Text + ".jpg");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar la foto");
+            }
             
-            idPorducto++;
-            datosBase.consultarProducto(idPorducto);
-            label36.Text = datosBase.Prod_nombre;
-            label37.Text = datosBase.Prod_cantidad;
-            label38.Text = datosBase.Prod_ubicacion;
-            label39.Text = datosBase.Prod_proveedor;
-            label46.Text = datosBase.Prod_barcode;
-            pictureBox3.Image = Image.FromFile(ruta + label36.Text + ".JPEG");
         }
 
         private void label31_Click(object sender, EventArgs e)
@@ -709,17 +755,20 @@ namespace StockManagerMKv1
         private void button40_Click(object sender, EventArgs e)
         {
             idPorducto2--;
+            Console.WriteLine(idPorducto2);
             datosBase.consultarProducto(idPorducto2);
             textBox21.Text = datosBase.Prod_nombre;
             textBox22.Text = datosBase.Prod_cantidad;
             textBox23.Text = datosBase.Prod_ubicacion;
             textBox24.Text = datosBase.Prod_proveedor;
             pictureBox4.Image = Image.FromFile(ruta + textBox21.Text + ".JPEG");
+
         }
 
         private void button41_Click(object sender, EventArgs e)
         {
             idPorducto2++;
+            Console.WriteLine(idPorducto2);
             datosBase.consultarProducto(idPorducto2);
             textBox21.Text = datosBase.Prod_nombre;
             textBox22.Text = datosBase.Prod_cantidad;
@@ -769,11 +818,13 @@ namespace StockManagerMKv1
 
         }
 
+        //Modificar
         private void button43_Click(object sender, EventArgs e)
         {
-            datosBase.actualizarStock(textBox21.Text, Int32.Parse(textBox22.Text), textBox23.Text, textBox24.Text, idPorducto2);
+            theDate2 = dateTimePicker1.Value.ToString("yyyy-MM-dd");
+            datosBase.actualizarStock(textBox21.Text, Int32.Parse(textBox22.Text), textBox23.Text, textBox24.Text, idPorducto2+1, theDate2);
             SaveFileDialog Guardar = new SaveFileDialog();
-            //Guardar.Filter = "JPEG(*.JPG)|*.JPG|BMP(*.BMP)|*.BMP";
+            Guardar.Filter = "JPEG(*.JPG)|*.JPG|BMP(*.BMP)|*.BMP";
             Image foto = pictureBox4.Image;
             //File.Delete(ruta + textBox21.Text + ".JPEG");
             foto.Save(ruta + textBox21.Text + ".JPEG");
@@ -820,6 +871,63 @@ namespace StockManagerMKv1
         private void label46_Click(object sender, EventArgs e)
         {
 
+        }
+
+        //Fecha producto
+        private void label50_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //Fecha modificacion
+        private void label51_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label52_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //Codigo de barras a mano
+        private void textBox26_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        //Codigo de barras
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label47_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("se ha cerrado la sesion para poder realizar exportaciones");
+            datosBase.cerrar();
+            exportar = new Form5();
+            exportar.Show();
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.youtube.com/watch?v=yLWBZmdVMzc");
+        }
+
+        private void button18_Click_1(object sender, EventArgs e)
+        {
+            importar = new Form6();
+            importar.Show();
+        }
+
+        private void button14_Click_1(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://stockmanagervk.odoo.com");
         }
     }
 }
