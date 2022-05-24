@@ -17,6 +17,7 @@ namespace StockManagerMKv1
 {
     public partial class Form2 : Form
     {
+        //Variables
         clasesextra.bbdd datosBase = new clasesextra.bbdd();
         Random r;
         int idProveedor = -1;
