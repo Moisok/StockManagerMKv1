@@ -543,7 +543,18 @@ namespace StockManagerMKv1
 
         private void button20_Click(object sender, EventArgs e)
         {
-            datosBase.eliminarProveedores(textBox12.Text);
+            var confirmResult = MessageBox.Show("¿Seguro que quieres borrar al proveedor?", "Confirmar borrar",MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                // If 'Yes', do something here.
+                datosBase.eliminarProveedores(textBox12.Text);
+            }
+            else
+            {
+                // If 'No', do something here.
+            }
+
+            
         }
 
         private void label27_Click(object sender, EventArgs e)
@@ -845,7 +856,17 @@ namespace StockManagerMKv1
 
         private void button44_Click(object sender, EventArgs e)
         {
-            datosBase.eliminarProducto(textBox21.Text);
+            var confirmResult = MessageBox.Show("¿Seguro que quieres borrar el producto?", "Confirmar borrar", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                // If 'Yes', do something here.
+                datosBase.eliminarProducto(textBox21.Text);
+            }
+            else
+            {
+                // If 'No', do something here.
+            }
+     
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
